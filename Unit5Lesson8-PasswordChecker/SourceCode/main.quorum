@@ -1,0 +1,96 @@
+use Libraries.Game.Game
+use Libraries.Game.Graphics.Drawable
+use Libraries.Sound.Audio
+use Libraries.Game.Graphics.Color
+use Libraries.Interface.Events.KeyboardEvent
+use Libraries.Interface.Events.KeyboardListener
+use Libraries.Game.Graphics.Label
+use Libraries.Game.Graphics.Font
+use Libraries.Sound.Speech
+use Libraries.Interface.TextBox
+
+class Main is Game, KeyboardListener
+    
+    // Instantiating the Textbox object
+    TextBox box
+  
+    // Instantiating the Audio objects
+    Audio rightSound
+    Audio wrongSound
+
+    // Instatiating the Color objects
+    Color color
+    Color navy = color:Navy()
+
+    // Instantiating a Font object
+    Font font1
+
+    // Instantiating a Lable object
+    Label label1
+
+    //Instatiating a Speech object
+    Speech speech
+
+    // Declaring a text varibale that stores casted value from the integer varibale 'caounter'
+    text labelText = "Enter your password"
+    text boxInput = ""
+    text password = "helloworld2018"
+
+    action Main
+        say "Enter your password when the program starts."
+        StartGame()
+    end
+
+    action CreateGame
+        // Setting the dimention and the position of the textbox and adding it to the screen
+        box:SetPosition(150, 150)
+        box:Initialize(200, 50)
+        Add(box)
+       
+        // Making the textbox listen to the keyboard input
+        AddKeyboardListener(box)
+
+        //Setting the atributes fo the Font object
+        font1:LoadFont("Arial")
+        font1:SetSize(48)
+        font1:SetColor(navy)
+
+        // Setting the attributes to the Label object and adding it to the screen
+        label1:SetFont(font1)
+        label1:SetPosition(50, 300)
+        label1:SetText(labelText)
+        label1:SetDescription(labelText)
+        Add(label1)
+
+        // Loading the Audio files to the Audio objects to be played later
+        rightSound:Load("/media/code/Bing.ogg")
+        wrongSound:Load("/media/code/Boing.ogg")
+
+        // Making the program listen to the keyboard input
+        AddKeyboardListener(me)
+    end
+
+    action Update(number seconds)
+        //Updating csated counter in the label object
+        label1:SetText(labelText)
+        label1:SetDescription(labelText)
+        Add(label1)
+    end
+
+    action PressedKey(KeyboardEvent event)
+        if event:keyCode = event:ENTER
+            boxInput = box:GetInput()
+            if boxInput = password
+                labelText = "Password Accepted"
+                rightSound:Play()
+            else
+                labelText = "Error: Incorrect Password"
+                wrongSound:Play()
+            end
+        elseif event:keyCode = event:DOWN
+            speech:Say(label1:GetDescription())
+        elseif event:keyCode = event:ESCAPE
+            Exit()
+        end
+    end
+end
